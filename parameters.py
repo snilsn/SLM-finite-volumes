@@ -13,6 +13,7 @@ dz = L_z / N_z
 packing_efficiency = 0.3
 
 g = 9.81
+sigma = 5.670374419e-8
 
 argon_density = 0.974
 argon_c = 519.16
@@ -29,6 +30,7 @@ steel_powder_absoprtion = 0.7
 steel_volumentric_exp_coeff = 5.85e-5
 steel_youngs_modulos = 206.0
 steel_fluid_c = 790.0
+steel_emissivity = 0.7
 
 laser_power = 60.0
 beam_radius = 35e-6
