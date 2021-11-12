@@ -20,6 +20,7 @@ argon_c = 519.16
 steel_T_L = 1733.0
 steel_T_S = 1693.0
 steel_density = 7800.0
+steel_density_liquid = 6881
 steel_latent_heat = 272.0e3
 steel_visc = 7.0e-3
 steel_surface_tension_derivative = -0.40e-3
@@ -34,7 +35,7 @@ beam_radius = 35e-6
 distribution_factor = 1.5
 scanning_speed = 0.25 #250 mm per second
 
-layers = 5
+layers = 1
 hatches = 5
 
 layer_thickness = L_z / layers

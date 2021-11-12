@@ -1,4 +1,4 @@
-import fipy as fp
+from fipy import numerix, CellVariable
 
 def get_steel_specific_heat(temperature, mesh):
     
@@ -44,7 +44,6 @@ def get_effective_specific_heat(gas_density, solid_density, packing_factor, spec
     return CellVariable(mesh = mesh, name = 'specific heat', value=specific_heat)
 
 def get_liquid_fraction(temperature, mesh, solidus_temperature, liquidus_temperature):
-    
     temperature_array = numerix.array(temperature)
     
     mushy_array = (temperature_array - solidus_temperature)/(liquidus_temperature-solidus_temperature)
@@ -57,3 +56,4 @@ def get_liquid_fraction(temperature, mesh, solidus_temperature, liquidus_tempera
     liquid_fraction[solid_bool] = 0.0
 
     return CellVariable(mesh = mesh, name = 'liquid_fraction', value = liquid_fraction)
+
