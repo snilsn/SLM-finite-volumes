@@ -2,9 +2,9 @@ L_x = 0.0005
 L_y = 0.0002
 L_z = 0.00006
 
-N_x = 110
-N_y = 50
-N_z = 10
+N_x = 55
+N_y = 25
+N_z = 20
 
 dx = L_x / N_x
 dy = L_y / N_y
@@ -33,15 +33,15 @@ steel_fluid_c = 790.0
 steel_emissivity = 0.7
 
 laser_power = 60.0
-beam_radius = 35e-6
+beam_radius = 60e-6
 distribution_factor = 1.5
 scanning_speed = 0.25 #250 mm per second
 
-layers = 1
+layers = 5
 hatches = 5
 
 layer_thickness = L_z / layers
 hatch_width = L_y / hatches
 
 time_steps = 100
-dt = beam_radius / scanning_speed * 1/10
+dt = beam_radius / scanning_speed * 0.05
