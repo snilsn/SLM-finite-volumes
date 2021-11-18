@@ -22,7 +22,8 @@ def get_gas_thermal_conductivity(mesh, temperature):
     return CellVariable(mesh = mesh, name = 'gas thermal conductivity', value=thermal_conductivity)
 
 def get_effective_cond(mesh, temperature, packing_factor):
-    N = 12.0 #coordination number
+    
+    N = 8.0 #coordination number
     particle_diameter = 40e-6
     
     L = 5.4e-4/particle_diameter
@@ -56,4 +57,20 @@ def get_liquid_fraction(temperature, mesh, solidus_temperature, liquidus_tempera
     liquid_fraction[solid_bool] = 0.0
 
     return CellVariable(mesh = mesh, name = 'liquid_fraction', value = liquid_fraction)
+
+def update_molten_cells(molten_cells, liquid_fraction):
+    
+    molten_array = numerix.array(molten_cells)
+    liquid_array = numerix.array(liquid_fraction)
+    
+    new_molten_array = numerix.zeros(len(molten_array))
+    
+    new_molten_array = numerix.where(liquid_array == 1.0, 1.0, 0.0)
+    new_molten_array = numerix.where(molten_array == 1.0, 1.0, new_molten_array)
+    
+    molten_cells = CellVariable(mesh = molten_cells.mesh, name = 'molten', value = new_molten_array)
+    
+    return molten_cells
+    
+    
 

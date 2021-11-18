@@ -10,7 +10,7 @@ dx = L_x / N_x
 dy = L_y / N_y
 dz = L_z / N_z
 
-packing_efficiency = 0.3
+packing_efficiency = 0.6
 
 g = 9.81
 sigma = 5.670374419e-8
@@ -33,8 +33,8 @@ steel_fluid_c = 790.0
 steel_emissivity = 0.7
 
 laser_power = 60.0
-beam_radius = 60e-6
-distribution_factor = 1.5
+beam_radius = 35e-6
+distribution_factor = 2.0
 scanning_speed = 0.25 #250 mm per second
 
 layers = 5
@@ -44,4 +44,4 @@ layer_thickness = L_z / layers
 hatch_width = L_y / hatches
 
 time_steps = 100
-dt = beam_radius / scanning_speed * 0.05
+dt = beam_radius / scanning_speed * 0.1
