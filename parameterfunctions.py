@@ -2,10 +2,46 @@ from fipy import numerix, CellVariable
 
 def get_steel_specific_heat(temperature, mesh):
     
+    #returns the specific heat of solid steel as CellVariable
+    #valid for temperatures below solidus temperature
+    
     temperature_array = numerix.array(temperature)
     specific_heat = 330.9+0.563*temperature_array-4.015e-4*temperature_array**2.0+9.465e-8*temperature_array**3.0
     
     return CellVariable(mesh = mesh, name = 'specific heat steel', value=specific_heat)
+
+def get_effective_specific_heat(gas_density, solid_density, packing_factor, specific_heat_gas, temperature, mesh):
+    
+    #returns the effectiv specific heat of the powder
+    #valid if the powder isnt completely melted
+    
+    density = get_effective_density(gas_density, solid_density, packing_factor)
+    specific_heat =  (solid_density*packing_factor*get_steel_specific_heat(temperature, mesh) + gas_density*(1-packing_factor)*specific_heat_gas)/density
+    
+    return CellVariable(mesh = mesh, name = 'specific heat', value=specific_heat)
+
+def get_specific_heat(temperature, liquid, molten, gas_density, solid_density, packing_factor, solidus_temperature, fluid_c):
+    
+    #returns the specific heat of the powder below solidus temperature,
+    #returns linear transistion of powder and liquid steel specific heat between solidus and liquidus temparture
+    #returns liquid steel spec heat for temperatures higher liquidis
+    #returns solid steel c, when a cell has melted completely and tempeature is below solidus
+    
+    mesh = temperature.mesh
+    effective_heat = numerix.array(get_effective_specific_heat(gas_density, solid_density, packing_factor, gas_density, temperature, mesh))
+    solid = numerix.array(1-liquid)
+    liquid = numerix.array(liquid)
+    steal_heat = numerix.array(get_steel_specific_heat(temperature, mesh))
+    
+    temp_array = numerix.array(temperature)
+    molten_array = numerix.array(molten)
+    
+    bool_mask1 = temp_array < solidus_temperature 
+    bools_mask2 = molten_array == 1.0
+    bool_mask = bool_mask1*bools_mask2
+    heat_array = numerix.where(bool_mask, steal_heat, solid*effective_heat + liquid*fluid_c)
+    
+    return CellVariable(mesh = mesh, name = 'effective heat', value = heat_array)
 
 def get_steel_thermal_conductivity(mesh, temperature):
     
@@ -23,7 +59,7 @@ def get_gas_thermal_conductivity(mesh, temperature):
 
 def get_effective_cond(mesh, temperature, packing_factor):
     
-    N = 8.0 #coordination number
+    N = 7.0 #coordination number
     particle_diameter = 40e-6
     
     L = 5.4e-4/particle_diameter
@@ -35,14 +71,27 @@ def get_effective_cond(mesh, temperature, packing_factor):
     
     return CellVariable(mesh = mesh, name = 'effective thermal conductivity', value=k)
 
+def get_thermal_conductivity(temperature, packing_factor, molten, liquid, liquid_cond, solidus_temperature):
+    
+    mesh = temperature.mesh
+    temp_array = numerix.array(temperature)
+    molten_array = numerix.array(molten)
+    
+    effective_cond = numerix.array(get_effective_cond(mesh, temperature, packing_factor))
+    steal_cond = numerix.array(get_steel_thermal_conductivity(mesh, temperature))
+    solid = numerix.array(1-liquid)
+    liquid = numerix.array(liquid)
+    
+    bool_mask1 = temp_array < solidus_temperature 
+    bools_mask2 = molten_array == 1.0
+    bool_mask = bool_mask1*bools_mask2
+    
+    k = numerix.where(bool_mask, steal_cond, solid*effective_cond+liquid*liquid_cond)
+    
+    return CellVariable(mesh = mesh, name = 'thermal conductivity', value = k)
+
 def get_effective_density(gas_density, solid_density, packing_factor):
     return solid_density * packing_factor + gas_density*(1-packing_factor)
-
-def get_effective_specific_heat(gas_density, solid_density, packing_factor, specific_heat_gas, temperature, mesh):
-    density = get_effective_density(gas_density, solid_density, packing_factor)
-    specific_heat =  (solid_density*packing_factor*get_steel_specific_heat(temperature, mesh) + gas_density*(1-packing_factor)*specific_heat_gas)/density
-    
-    return CellVariable(mesh = mesh, name = 'specific heat', value=specific_heat)
 
 def get_liquid_fraction(temperature, mesh, solidus_temperature, liquidus_temperature):
     temperature_array = numerix.array(temperature)
