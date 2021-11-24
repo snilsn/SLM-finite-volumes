@@ -29,17 +29,15 @@ def get_specific_heat(temperature, liquid, molten, gas_density, solid_density, p
     
     mesh = temperature.mesh
     effective_heat = numerix.array(get_effective_specific_heat(gas_density, solid_density, packing_factor, gas_density, temperature, mesh))
-    solid = numerix.array(1-liquid)
+    solid = numerix.array(1.0-liquid)
     liquid = numerix.array(liquid)
     steal_heat = numerix.array(get_steel_specific_heat(temperature, mesh))
     
     temp_array = numerix.array(temperature)
     molten_array = numerix.array(molten)
     
-    bool_mask1 = temp_array < solidus_temperature 
-    bools_mask2 = molten_array == 1.0
-    bool_mask = bool_mask1*bools_mask2
-    heat_array = numerix.where(bool_mask, steal_heat, solid*effective_heat + liquid*fluid_c)
+    bool_mask = molten_array == 1.0
+    heat_array = numerix.where(bool_mask, solid*steal_heat+liquid*fluid_c, solid*effective_heat + liquid*fluid_c)
     
     return CellVariable(mesh = mesh, name = 'effective heat', value = heat_array)
 
@@ -79,14 +77,12 @@ def get_thermal_conductivity(temperature, packing_factor, molten, liquid, liquid
     
     effective_cond = numerix.array(get_effective_cond(mesh, temperature, packing_factor))
     steal_cond = numerix.array(get_steel_thermal_conductivity(mesh, temperature))
-    solid = numerix.array(1-liquid)
+    solid = numerix.array(1.0-liquid)
     liquid = numerix.array(liquid)
+
+    bool_mask = molten_array == 1.0
     
-    bool_mask1 = temp_array < solidus_temperature 
-    bools_mask2 = molten_array == 1.0
-    bool_mask = bool_mask1*bools_mask2
-    
-    k = numerix.where(bool_mask, steal_cond, solid*effective_cond+liquid*liquid_cond)
+    k = numerix.where(bool_mask, solid*steal_cond+liquid*liquid_cond, solid*effective_cond+liquid*liquid_cond)
     
     return CellVariable(mesh = mesh, name = 'thermal conductivity', value = k)
 
@@ -120,6 +116,3 @@ def update_molten_cells(molten_cells, liquid_fraction):
     molten_cells = CellVariable(mesh = molten_cells.mesh, name = 'molten', value = new_molten_array)
     
     return molten_cells
-    
-    
-

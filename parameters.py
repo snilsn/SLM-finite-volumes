@@ -31,11 +31,11 @@ steel_volumentric_exp_coeff = 5.85e-5
 steel_youngs_modulos = 206.0
 steel_fluid_c = 790.0
 steel_emissivity = 0.7
-steel_cond_fluid = 30.0 #???
+steel_cond_fluid = 60.0 #???
 
 laser_power = 60.0
-beam_radius = 35e-6
-distribution_factor = 2.0
+beam_radius = 50e-6
+distribution_factor = 3.0
 scanning_speed = 0.25 #250 mm per second
 
 layers = 5
