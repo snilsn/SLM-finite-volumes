@@ -1,3 +1,5 @@
+from fipy import numerix
+
 L_x = 0.0005
 L_y = 0.0002
 L_z = 0.00006
@@ -31,12 +33,14 @@ steel_volumentric_exp_coeff = 5.85e-5
 steel_youngs_modulos = 206.0
 steel_fluid_c = 790.0
 steel_emissivity = 0.7
-steel_cond_fluid = 60.0 #???
+steel_cond_fluid = 30.0 #???
 
 laser_power = 60.0
 beam_radius = 50e-6
 distribution_factor = 3.0
 scanning_speed = 0.25 #250 mm per second
+
+N_IH = laser_power*steel_liquid_absoprtion/(numerix.pi*beam_radius**2*scanning_speed)/(steel_density_liquid*steel_fluid_c*(steel_T_L-300)+steel_density_liquid*steel_latent_heat)
 
 layers = 5
 hatches = 5

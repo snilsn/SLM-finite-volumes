@@ -69,8 +69,9 @@ def get_effective_cond(mesh, temperature, packing_factor):
     
     return CellVariable(mesh = mesh, name = 'effective thermal conductivity', value=k)
 
-def get_thermal_conductivity(temperature, packing_factor, molten, liquid, liquid_cond, solidus_temperature):
+def get_thermal_conductivity(temperature, packing_factor, molten, liquid, liquid_cond, solidus_temperature, N_IH):
     
+    liquid_cond = get_melting_cond(N_IH, liquid_cond)
     mesh = temperature.mesh
     temp_array = numerix.array(temperature)
     molten_array = numerix.array(molten)
@@ -85,6 +86,9 @@ def get_thermal_conductivity(temperature, packing_factor, molten, liquid, liquid
     k = numerix.where(bool_mask, solid*steal_cond+liquid*liquid_cond, solid*effective_cond+liquid*liquid_cond)
     
     return CellVariable(mesh = mesh, name = 'thermal conductivity', value = k)
+
+def get_melting_cond(N_IH, liquid_cond):
+    return (1.0+0.84*N_IH)*liquid_cond
 
 def get_effective_density(gas_density, solid_density, packing_factor):
     return solid_density * packing_factor + gas_density*(1-packing_factor)
