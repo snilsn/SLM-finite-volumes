@@ -4,9 +4,9 @@ L_x = 0.0005
 L_y = 0.0002
 L_z = 0.00006
 
-N_x = 55
+N_x = 25
 N_y = 25
-N_z = 20
+N_z = 25
 
 dx = L_x / N_x
 dy = L_y / N_y
@@ -37,8 +37,8 @@ steel_cond_fluid = 30.0 #???
 
 laser_power = 60.0
 beam_radius = 50e-6
-distribution_factor = 3.0
-scanning_speed = 0.25 #250 mm per second
+distribution_factor = 1.5
+scanning_speed = 1.0 #250 mm per second
 
 N_IH = laser_power*steel_liquid_absoprtion/(numerix.pi*beam_radius**2*scanning_speed)/(steel_density_liquid*steel_fluid_c*(steel_T_L-300)+steel_density_liquid*steel_latent_heat)
 
@@ -48,5 +48,5 @@ hatches = 5
 layer_thickness = L_z / layers
 hatch_width = L_y / hatches
 
-time_steps = 100
+time_steps = 50
 dt = beam_radius / scanning_speed * 0.1
