@@ -48,5 +48,5 @@ hatches = 5
 layer_thickness = L_z / layers
 hatch_width = L_y / hatches
 
-time_steps = 50
+time_steps = 100
 dt = beam_radius / scanning_speed * 0.1
